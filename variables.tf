@@ -42,6 +42,7 @@ variable "max_server_sessions" {
 }
 
 variable "domains" {
-  description = "List of domains that will be used with this load balancer. All of the domains in this list should have a CNAME record set pointing to load balancer DNS name (see `dns_name` output)"
+  description = "List of domains that will be used with this load balancer. All of the domains in this list should have a CNAME record set pointing to load balancer DNS name (see `dns_name` output). If left empty, no TLS configuration will be created for the load balancer frontend."
   type        = list(string)
+  default     = []
 }

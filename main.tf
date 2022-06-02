@@ -40,13 +40,15 @@ resource "upcloud_loadbalancer_frontend" "main" {
 }
 
 resource "upcloud_loadbalancer_dynamic_certificate_bundle" "main" {
+  count     = length(var.domains) > 0 ? 1 : 0
   name      = "main"
   hostnames = var.domains
   key_type  = "rsa"
 }
 
 resource "upcloud_loadbalancer_frontend_tls_config" "main" {
+  count              = length(var.domains) > 0 ? 1 : 0
   frontend           = upcloud_loadbalancer_frontend.main.id
   name               = "main"
-  certificate_bundle = upcloud_loadbalancer_dynamic_certificate_bundle.main.id
+  certificate_bundle = upcloud_loadbalancer_dynamic_certificate_bundle.main[count.index].id
 }
