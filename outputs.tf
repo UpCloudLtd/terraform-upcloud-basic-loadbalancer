@@ -3,7 +3,7 @@ output "id" {
 }
 
 output "dns_name" {
-  value = upcloud_loadbalancer.main.dns_name
+  value = upcloud_loadbalancer.main.networks[0].dns_name
 }
 
 output "backend_name" {

@@ -2,7 +2,7 @@ terraform {
   required_providers {
     upcloud = {
       source  = "UpCloudLtd/upcloud"
-      version = "~> 2.4"
+      version = "~> 5.23"
     }
   }
 }
@@ -12,7 +12,19 @@ resource "upcloud_loadbalancer" "main" {
   name              = var.name
   plan              = var.plan
   zone              = var.zone
-  network           = var.network
+
+  networks {
+    name = "public"
+    family = "IPv4"
+    type = "public"
+  }
+
+  networks {
+    name = "private"
+    family = "IPv4"
+    network = var.network
+    type = "private"
+  }
 }
 
 resource "upcloud_loadbalancer_backend" "main" {
@@ -37,6 +49,10 @@ resource "upcloud_loadbalancer_frontend" "main" {
   mode                 = "http"
   port                 = var.frontend_port
   default_backend_name = upcloud_loadbalancer_backend.main.name
+
+  networks {
+    name = upcloud_loadbalancer.main.networks[0].name
+  }
 }
 
 resource "upcloud_loadbalancer_dynamic_certificate_bundle" "main" {
